@@ -194,7 +194,13 @@ class IosDeployPlatform < Formula
                   CURRENT_DIR="$(pwd)"
                   # Set up environment and run deploy.sh from the iOS project directory
                   export FL_SCRIPTS_DIR="$INSTALL_DIR/scripts"
-                  exec "$INSTALL_DIR/scripts/deploy.sh" "$@"
+                  # Translate 'deploy' to 'build_and_upload' for the underlying script
+                  if [[ "$1" == "deploy" ]]; then
+                      shift
+                      exec "$INSTALL_DIR/scripts/deploy.sh" "build_and_upload" "$@"
+                  else
+                      exec "$INSTALL_DIR/scripts/deploy.sh" "$@"
+                  fi
                   ;;
               *)
                   echo "❌ Unknown command: $1"
