@@ -1,10 +1,10 @@
 class IosDeployPlatform < Formula
   desc "Enterprise-grade iOS TestFlight automation with intelligent certificate management"
   homepage "https://github.com/snooky23/ios-deploy-platform"
-  url "https://github.com/snooky23/ios-deploy-platform/archive/refs/tags/v2.3.0.tar.gz"
+  url "https://github.com/snooky23/ios-deploy-platform/archive/refs/tags/v2.4.0.tar.gz"
   license "MIT"
-  version "2.3.0"
-  sha256 "d0fae043fd57b322bc1f8372c6abb5a6581d29f29240c0bfa44d0973af5eb45e"
+  version "2.4.0"
+  sha256 "36eb47315e553e4d8aef5eb818f08858f3b4b7627e97911ca9f9b1a52d1f67e9"
 
   # Dependencies
   depends_on "cocoapods" => :optional
@@ -80,7 +80,7 @@ class IosDeployPlatform < Formula
       # Show usage information
       show_usage() {
           cat <<EOF
-      📱 iOS FastLane Auto Deploy v2.3.0
+      📱 iOS FastLane Auto Deploy v2.4.0
       Enterprise-grade iOS TestFlight automation platform
       
       USAGE:
@@ -182,7 +182,7 @@ class IosDeployPlatform < Formula
                   show_usage
                   ;;
               "version"|"--version"|"-v")
-                  echo "iOS FastLane Auto Deploy v2.3.0"
+                  echo "iOS FastLane Auto Deploy v2.4.0"
                   echo "Built with ❤️  for iOS developers"
                   ;;
               "init")
@@ -474,7 +474,7 @@ class IosDeployPlatform < Formula
 
   test do
     # Test that the CLI wrapper is properly installed and executable
-    assert_match "iOS FastLane Auto Deploy v2.3.0", shell_output("#{bin}/ios-deploy version")
+    assert_match "iOS FastLane Auto Deploy v2.4.0", shell_output("#{bin}/ios-deploy version")
     
     # Test help command
     assert_match "Enterprise-grade iOS TestFlight automation", shell_output("#{bin}/ios-deploy help")
