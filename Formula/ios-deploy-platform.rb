@@ -63,11 +63,15 @@ class IosDeployPlatform < Formula
       
       # Ensure we're in a valid iOS project directory
       check_ios_project() {
-          if [[ ! -f "*.xcodeproj/project.pbxproj" && ! -f "*.xcworkspace/contents.xcworkspacedata" ]]; then
-              if [[ "$1" != "init" && "$1" != "help" && "$1" != "version" ]]; then
+          if [[ "$1" != "init" && "$1" != "help" && "$1" != "version" ]]; then
+              # Check for .xcodeproj or .xcworkspace directories
+              if ! find . -maxdepth 1 -name "*.xcodeproj" -type d | grep -q . && \
+                 ! find . -maxdepth 1 -name "*.xcworkspace" -type d | grep -q .; then
                   echo "❌ Error: Not in an iOS project directory"
                   echo "   Please run this command from your iOS project root directory"
                   echo "   (directory containing .xcodeproj or .xcworkspace)"
+                  echo "   Current directory: $(pwd)"
+                  echo "   Found files: $(ls -la | head -5)"
                   exit 1
               fi
           fi
