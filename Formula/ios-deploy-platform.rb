@@ -190,8 +190,9 @@ class IosDeployPlatform < Formula
                   ;;
               "deploy"|"build_and_upload"|"setup_certificates"|"validate_machine"|"status")
                   check_ios_project "$1"
-                  # Change to installation directory and run the original deploy.sh
-                  cd "$INSTALL_DIR"
+                  # Save the current working directory (iOS project directory)
+                  CURRENT_DIR="$(pwd)"
+                  # Set up environment and run deploy.sh from the iOS project directory
                   export FL_SCRIPTS_DIR="$INSTALL_DIR/scripts"
                   exec "$INSTALL_DIR/scripts/deploy.sh" "$@"
                   ;;
