@@ -13,12 +13,6 @@ class IosDeployPlatform < Formula
   depends_on "ruby@3.2"
   depends_on "xcode-install" => :optional
 
-  # Ruby gem dependencies will be handled via bundler
-  resource "bundler" do
-    url "https://rubygems.org/downloads/bundler-2.4.22.gem"
-    sha256 "747ba50b0e67df25cbd3b48f95831a77a4d53a581d55f063972fcb146d142c5f"
-  end
-
   def install
     # Install the main application to libexec to avoid conflicts
     libexec.install Dir["*"]
@@ -33,16 +27,9 @@ class IosDeployPlatform < Formula
     man1.mkpath
     (man1/"ios-deploy.1").write man_page_content
     
-    # Install Ruby gems using bundler
-    system "#{Formula["ruby@3.2"].opt_bin}/gem", "install", "bundler", "--no-document"
-    
-    # Set up Ruby environment
-    ENV["GEM_HOME"] = libexec/"vendor"
-    ENV["BUNDLE_PATH"] = libexec/"vendor"
-    
-    # Install gems from Gemfile
+    # Install gems from Gemfile using system bundler
     cd libexec do
-      system "#{Formula["ruby@3.2"].opt_bin}/bundle", "install", "--deployment", "--without", "development"
+      system "bundle", "install", "--deployment", "--without", "development"
     end
     
     # Create configuration directory
