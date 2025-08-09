@@ -27,10 +27,8 @@ class IosDeployPlatform < Formula
     man1.mkpath
     (man1/"ios-deploy.1").write man_page_content
     
-    # Install gems from Gemfile using system bundler
-    cd libexec do
-      system "bundle", "install", "--deployment", "--without", "development"
-    end
+    # Skip gem installation - FastLane is provided by Homebrew dependency
+    # Ruby gems will be handled at runtime by the wrapper script
     
     # Create configuration directory
     (etc/"ios-deploy").mkpath
