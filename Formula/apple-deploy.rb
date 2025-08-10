@@ -13,8 +13,7 @@ class AppleDeploy < Formula
   # macOS-specific dependencies (iOS development is macOS-only)
   depends_on :macos
   
-  # Optional but recommended dependencies
-  depends_on "xcode-install" => :optional
+  # Optional but recommended dependencies  
   depends_on "cocoapods" => :optional
 
 
