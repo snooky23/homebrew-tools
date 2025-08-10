@@ -1,4 +1,4 @@
-class IosDeployPlatform < Formula
+class AppleDeploy < Formula
   desc "Enterprise-grade iOS TestFlight automation with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
   url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.10.0.tar.gz"
