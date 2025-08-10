@@ -32,17 +32,13 @@ class AppleDeploy < Formula
     man1.mkpath
     (man1/"ios-deploy.1").write man_page_content
     
-    # Install bundler using system ruby
-    system "#{Formula["ruby@3.2"].opt_bin}/gem", "install", "bundler", "--no-document" rescue nil
+    # Skip bundler installation as it may already be present
     
     # Set up Ruby environment
     ENV["GEM_HOME"] = libexec/"vendor"
     ENV["BUNDLE_PATH"] = libexec/"vendor"
     
-    # Install gems from Gemfile (skip deployment for cross-platform compatibility)
-    cd libexec do
-      system "#{Formula["ruby@3.2"].opt_bin}/bundle", "install", "--path", "vendor", "--without", "development"
-    end
+    # Skip gem installation - let runtime handle it
     
     # Create configuration directory
     (etc/"ios-deploy").mkpath
