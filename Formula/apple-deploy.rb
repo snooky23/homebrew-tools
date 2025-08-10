@@ -1,22 +1,26 @@
 class AppleDeploy < Formula
-  desc "Enterprise-grade iOS TestFlight automation with Clean Architecture and intelligent certificate management"
+  desc "Enterprise-grade iOS TestFlight automation platform with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
   url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.10.0.tar.gz"
+  sha256 "f2e91b62a0748215072860690076624faccd9e0bbd8de0ed370b341613cc2c17"
   license "MIT"
   version "2.10.0"
-  sha256 "f2e91b62a0748215072860690076624faccd9e0bbd8de0ed370b341613cc2c17"
 
   # Dependencies
-  depends_on "cocoapods" => :optional
-  depends_on "fastlane"
-  depends_on :macos
   depends_on "ruby@3.2"
+  depends_on "fastlane"
+  
+  # macOS-specific dependencies (iOS development is macOS-only)
+  depends_on :macos
+  
+  # Optional but recommended dependencies
   depends_on "xcode-install" => :optional
+  depends_on "cocoapods" => :optional
 
   # Ruby gem dependencies will be handled via bundler
   resource "bundler" do
     url "https://rubygems.org/downloads/bundler-2.4.22.gem"
-    sha256 "747ba50b0e67df25cbd3b48f95831a77a4d53a581d55f063972fcb146d142c5f"
+    sha256 "f09ce61928b7c4b84f533092e6a9235a967de076f6d07b0a7f2c61f996ac84e9"
   end
 
   def install
@@ -111,17 +115,17 @@ class AppleDeploy < Formula
           team_id="XXXXXXXXXX"                 Apple Developer Team ID
           app_identifier="com.company.app"     Bundle identifier  
           apple_id="dev@email.com"             Apple Developer email
+          api_key_path="AuthKey_XXX.p8"        API key filename
           api_key_id="YOUR_KEY_ID"             App Store Connect API Key ID
           api_issuer_id="your-issuer-uuid"     API Issuer ID
           app_name="Your App"                  Display name
           scheme="YourScheme"                  Xcode scheme
       
       OPTIONAL PARAMETERS:
-          api_key_path="AuthKey_XXX.p8"               API key filename (auto-detected)
-          apple_info_dir="/custom/path"               Apple info base directory
           version_bump="patch|minor|major|auto|sync"  Version increment strategy
           testflight_enhanced="true|false"           Enhanced TestFlight confirmation
           p12_password="password"                     P12 certificate password
+          apple_info_dir="/custom/path"               Custom apple_info location
       
       EXAMPLES:
           # Initialize a new project
@@ -132,6 +136,7 @@ class AppleDeploy < Formula
               team_id="YOUR_TEAM_ID" \\
               app_identifier="com.myapp" \\
               apple_id="dev@email.com" \\
+              api_key_path="AuthKey_ABC123.p8" \\
               api_key_id="ABC123" \\
               api_issuer_id="12345678-1234-1234-1234-123456789012" \\
               app_name="My App" \\
@@ -181,7 +186,7 @@ class AppleDeploy < Formula
       2. Edit apple_info/config.env with your team details
       
       3. Run your first deployment:
-         ios-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.your.app" [...]
+         ios-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.your.app" ...
       
       EOF
       }
@@ -290,6 +295,10 @@ class AppleDeploy < Formula
       Apple Developer account email
       
       .TP
+      .BI api_key_path= PATH
+      App Store Connect API key filename (e.g., "AuthKey_ABC123.p8")
+      
+      .TP
       .BI api_key_id= KEY_ID
       App Store Connect API Key ID
       
@@ -307,14 +316,6 @@ class AppleDeploy < Formula
       
       .SH OPTIONAL OPTIONS
       .TP
-      .BI api_key_path= PATH
-      API key filename (auto-detected if not specified)
-      
-      .TP
-      .BI apple_info_dir= PATH
-      Custom path to apple_info directory
-      
-      .TP
       .BI version_bump= STRATEGY
       Version increment strategy: patch, minor, major, auto, or sync
       
@@ -325,6 +326,10 @@ class AppleDeploy < Formula
       .TP
       .BI p12_password= PASSWORD
       Password for P12 certificate files
+      
+      .TP
+      .BI apple_info_dir= PATH
+      Custom path to apple_info directory
       
       .SH FILES
       .TP
@@ -351,7 +356,7 @@ class AppleDeploy < Formula
       
       Deploy to TestFlight:
       .RS
-      ios-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.myapp" apple_id="dev@email.com" api_key_id="ABC123" api_issuer_id="12345678-1234-1234-1234-123456789012" app_name="My App" scheme="MyApp"
+      ios-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.myapp" apple_id="dev@email.com" api_key_path="AuthKey_ABC123.p8" api_key_id="ABC123" api_issuer_id="12345678-1234-1234-1234-123456789012" app_name="My App" scheme="MyApp"
       .RE
       
       Deploy with enhanced TestFlight monitoring:
