@@ -1,59 +1,73 @@
-class AppleDeploy < Formula
-  desc "Enterprise-grade iOS TestFlight automation with intelligent certificate management"
+class IosDeployPlatform < Formula
+  desc "Enterprise-grade iOS TestFlight automation with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
-  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.9.3.tar.gz"
+  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.10.0.tar.gz"
   license "MIT"
-  version "2.9.3"
-  sha256 "28430344985b7ca961f60d0784e7fc254a4390e6354124209f7acbd6090be261"
+  version "2.10.0"
+  sha256 "f2e91b62a0748215072860690076624faccd9e0bbd8de0ed370b341613cc2c17"
 
   # Dependencies
   depends_on "cocoapods" => :optional
   depends_on "fastlane"
   depends_on :macos
   depends_on "ruby@3.2"
-  # Note: xcode-install dependency removed - deprecated package not available in Homebrew
+  depends_on "xcode-install" => :optional
+
+  # Ruby gem dependencies will be handled via bundler
+  resource "bundler" do
+    url "https://rubygems.org/downloads/bundler-2.4.22.gem"
+    sha256 "f09ce61928b7c4b84f533092e6a9235a967de076f6d07b0a7f2c61f996ac84e9"
+  end
 
   def install
     # Install the main application to libexec to avoid conflicts
     libexec.install Dir["*"]
     
     # Create the main CLI wrapper script
-    (bin/"apple-deploy").write apple_deploy_script
+    (bin/"ios-deploy").write ios_deploy_script
     
     # Make the wrapper executable
-    chmod 0755, bin/"apple-deploy"
+    chmod 0755, bin/"ios-deploy"
     
     # Create man page directory and install documentation
     man1.mkpath
-    (man1/"apple-deploy.1").write man_page_content
+    (man1/"ios-deploy.1").write man_page_content
     
-    # Skip gem installation - FastLane is provided by Homebrew dependency
-    # Ruby gems will be handled at runtime by the wrapper script
+    # Install Ruby gems using bundler
+    system "#{Formula["ruby@3.2"].opt_bin}/gem", "install", "bundler", "--no-document"
+    
+    # Set up Ruby environment
+    ENV["GEM_HOME"] = libexec/"vendor"
+    ENV["BUNDLE_PATH"] = libexec/"vendor"
+    
+    # Install gems from Gemfile
+    cd libexec do
+      system "#{Formula["ruby@3.2"].opt_bin}/bundle", "install", "--deployment", "--without", "development"
+    end
     
     # Create configuration directory
-    (etc/"apple-deploy").mkpath
+    (etc/"ios-deploy").mkpath
     
-    # Install example configuration (only if it doesn't exist)
-    config_example_file = etc/"apple-deploy/config.example"
-    config_example_file.write config_example_content unless config_example_file.exist?
+    # Install example configuration
+    (etc/"ios-deploy/config.example").write config_example_content
     
     # Create logs directory
-    (var/"log/apple-deploy").mkpath
+    (var/"log/ios-deploy").mkpath
   end
 
-  def apple_deploy_script
+  def ios_deploy_script
     <<~EOS
       #!/usr/bin/env bash
       
-      # iOS FastLane Auto Deploy - Homebrew CLI Wrapper  
-      # Version: 2.9.3
+      # iOS FastLane Auto Deploy - Homebrew CLI Wrapper
+      # Version: 2.10.0
       
       set -e
       
       # Configuration
       INSTALL_DIR="#{libexec}"
-      CONFIG_DIR="#{etc}/apple-deploy"
-      LOG_DIR="#{var}/log/apple-deploy"
+      CONFIG_DIR="#{etc}/ios-deploy"
+      LOG_DIR="#{var}/log/ios-deploy"
       RUBY_PATH="#{Formula["ruby@3.2"].opt_bin}/ruby"
       BUNDLE_PATH="#{Formula["ruby@3.2"].opt_bin}/bundle"
       
@@ -64,15 +78,11 @@ class AppleDeploy < Formula
       
       # Ensure we're in a valid iOS project directory
       check_ios_project() {
-          if [[ "$1" != "init" && "$1" != "help" && "$1" != "version" ]]; then
-              # Check for .xcodeproj or .xcworkspace directories
-              if ! find . -maxdepth 1 -name "*.xcodeproj" -type d | grep -q . && \
-                 ! find . -maxdepth 1 -name "*.xcworkspace" -type d | grep -q .; then
+          if [[ ! -f "*.xcodeproj/project.pbxproj" && ! -f "*.xcworkspace/contents.xcworkspacedata" ]]; then
+              if [[ "$1" != "init" && "$1" != "help" && "$1" != "version" ]]; then
                   echo "❌ Error: Not in an iOS project directory"
                   echo "   Please run this command from your iOS project root directory"
                   echo "   (directory containing .xcodeproj or .xcworkspace)"
-                  echo "   Current directory: $(pwd)"
-                  echo "   Found files: $(ls -la | head -5)"
                   exit 1
               fi
           fi
@@ -81,11 +91,11 @@ class AppleDeploy < Formula
       # Show usage information
       show_usage() {
           cat <<EOF
-      📱 iOS FastLane Auto Deploy v2.9.3
-      Enterprise-grade iOS TestFlight automation platform
+      📱 iOS FastLane Auto Deploy v2.10.0
+      Enterprise-grade iOS TestFlight automation platform with Clean Architecture
       
       USAGE:
-          apple-deploy <command> [options]
+          ios-deploy <command> [options]
       
       COMMANDS:
           deploy                Deploy app to TestFlight (same as build_and_upload)
@@ -115,11 +125,11 @@ class AppleDeploy < Formula
       
       EXAMPLES:
           # Initialize a new project
-          apple-deploy init
+          ios-deploy init
           
           # Deploy to TestFlight
-          apple-deploy deploy \\
-              team_id="NA5574MSN5" \\
+          ios-deploy deploy \\
+              team_id="YOUR_TEAM_ID" \\
               app_identifier="com.myapp" \\
               apple_id="dev@email.com" \\
               api_key_id="ABC123" \\
@@ -128,18 +138,18 @@ class AppleDeploy < Formula
               scheme="MyApp"
               
           # Deploy with enhanced TestFlight confirmation
-          apple-deploy deploy \\
-              team_id="NA5574MSN5" \\
+          ios-deploy deploy \\
+              team_id="YOUR_TEAM_ID" \\
               testflight_enhanced="true" \\
               [... other parameters]
               
       CONFIGURATION:
-          Global config: #{etc}/apple-deploy/config.env
+          Global config: #{etc}/ios-deploy/config.env
           Project config: ./apple_info/config.env
           
       DOCUMENTATION:
-          man apple-deploy        Show manual page
-          apple-deploy help       Show this help
+          man ios-deploy        Show manual page
+          ios-deploy help       Show this help
           
       For detailed documentation, visit:
       https://github.com/snooky23/apple-deploy
@@ -171,7 +181,7 @@ class AppleDeploy < Formula
       2. Edit apple_info/config.env with your team details
       
       3. Run your first deployment:
-         apple-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.your.app" [...]
+         ios-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.your.app" [...]
       
       EOF
       }
@@ -183,29 +193,22 @@ class AppleDeploy < Formula
                   show_usage
                   ;;
               "version"|"--version"|"-v")
-                  echo "iOS FastLane Auto Deploy v2.9.3"
-                  echo "Built with ❤️  for iOS developers"
+                  echo "iOS FastLane Auto Deploy v2.10.0"
+                  echo "Built with ❤️  for iOS developers - Enhanced Clean Architecture"
                   ;;
               "init")
                   init_project
                   ;;
               "deploy"|"build_and_upload"|"setup_certificates"|"validate_machine"|"status")
                   check_ios_project "$1"
-                  # Save the current working directory (iOS project directory)
-                  CURRENT_DIR="$(pwd)"
-                  # Set up environment and run deploy.sh from the iOS project directory
+                  # Change to installation directory and run the original deploy.sh
+                  cd "$INSTALL_DIR"
                   export FL_SCRIPTS_DIR="$INSTALL_DIR/scripts"
-                  # Translate 'deploy' to 'build_and_upload' for the underlying script
-                  if [[ "$1" == "deploy" ]]; then
-                      shift
-                      exec "$INSTALL_DIR/scripts/deploy.sh" "build_and_upload" "$@"
-                  else
-                      exec "$INSTALL_DIR/scripts/deploy.sh" "$@"
-                  fi
+                  exec "$INSTALL_DIR/scripts/deploy.sh" "$@"
                   ;;
               *)
                   echo "❌ Unknown command: $1"
-                  echo "Run 'apple-deploy help' for usage information"
+                  echo "Run 'ios-deploy help' for usage information"
                   exit 1
                   ;;
           esac
@@ -217,17 +220,17 @@ class AppleDeploy < Formula
 
   def man_page_content
     <<~EOS
-      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.9.3" "iOS Development Tools"
+      .TH IOS-DEPLOY 1 "January 2025" "ios-deploy 2.10.0" "iOS Development Tools"
       .SH NAME
-      apple-deploy \\- Enterprise-grade iOS TestFlight automation platform
+      ios-deploy \\- Enterprise-grade iOS TestFlight automation platform
       
       .SH SYNOPSIS
-      .B apple-deploy
+      .B ios-deploy
       .I command
       .RI [ options ]
       
       .SH DESCRIPTION
-      .B apple-deploy
+      .B ios-deploy
       is an enterprise-grade iOS TestFlight automation platform that provides complete end-to-end deployment automation from certificate management to TestFlight upload verification.
       
       Key features include:
@@ -276,7 +279,7 @@ class AppleDeploy < Formula
       .SH REQUIRED OPTIONS
       .TP
       .BI team_id= ID
-      Apple Developer Team ID (e.g., "NA5574MSN5")
+      Apple Developer Team ID (e.g., "YOUR_TEAM_ID")
       
       .TP
       .BI app_identifier= BUNDLE_ID
@@ -343,17 +346,17 @@ class AppleDeploy < Formula
       .SH EXAMPLES
       Initialize a new project:
       .RS
-      apple-deploy init
+      ios-deploy init
       .RE
       
       Deploy to TestFlight:
       .RS
-      apple-deploy deploy team_id="NA5574MSN5" app_identifier="com.myapp" apple_id="dev@email.com" api_key_id="ABC123" api_issuer_id="12345678-1234-1234-1234-123456789012" app_name="My App" scheme="MyApp"
+      ios-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.myapp" apple_id="dev@email.com" api_key_id="ABC123" api_issuer_id="12345678-1234-1234-1234-123456789012" app_name="My App" scheme="MyApp"
       .RE
       
       Deploy with enhanced TestFlight monitoring:
       .RS
-      apple-deploy deploy testflight_enhanced="true" [other_parameters...]
+      ios-deploy deploy testflight_enhanced="true" [other_parameters...]
       .RE
       
       .SH ENVIRONMENT
@@ -434,7 +437,7 @@ class AppleDeploy < Formula
       DEPLOYMENT_STATUS=""
       
       # Notes:
-      # - Parameters passed to apple-deploy command override these values
+      # - Parameters passed to ios-deploy command override these values
       # - Remove or comment out any line to use command-line parameters
       # - API keys and certificates should be placed in apple_info/ directory
     EOS
@@ -448,7 +451,7 @@ class AppleDeploy < Formula
       
       1. Initialize your iOS project:
          cd /path/to/your/ios/project
-         apple-deploy init
+         ios-deploy init
       
       2. Add your Apple Developer credentials to apple_info/:
          - API key: apple_info/AuthKey_XXXXX.p8
@@ -456,11 +459,11 @@ class AppleDeploy < Formula
          - Edit: apple_info/config.env
       
       3. Run your first deployment:
-         apple-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.your.app" [...]
+         ios-deploy deploy team_id="YOUR_TEAM_ID" app_identifier="com.your.app" [...]
       
       📚 DOCUMENTATION:
-      - Quick help: apple-deploy help
-      - Manual page: man apple-deploy
+      - Quick help: ios-deploy help
+      - Manual page: man ios-deploy
       - GitHub: https://github.com/snooky23/apple-deploy
       
       🔧 REQUIREMENTS:
@@ -475,10 +478,10 @@ class AppleDeploy < Formula
 
   test do
     # Test that the CLI wrapper is properly installed and executable
-    assert_match "iOS FastLane Auto Deploy v2.9.3", shell_output("#{bin}/apple-deploy version")
+    assert_match "iOS FastLane Auto Deploy v2.10.0", shell_output("#{bin}/ios-deploy version")
     
     # Test help command
-    assert_match "Enterprise-grade iOS TestFlight automation", shell_output("#{bin}/apple-deploy help")
+    assert_match "Enterprise-grade iOS TestFlight automation", shell_output("#{bin}/ios-deploy help")
     
     # Test that Ruby and gems are properly installed
     system "#{Formula["ruby@3.2"].opt_bin}/ruby", "-e", "require 'fastlane'"
