@@ -1,10 +1,10 @@
 class IosDeployPlatform < Formula
   desc "Enterprise-grade iOS TestFlight automation with intelligent certificate management"
   homepage "https://github.com/snooky23/ios-deploy-platform"
-  url "https://github.com/snooky23/ios-deploy-platform/archive/refs/tags/v2.8.1.tar.gz"
+  url "https://github.com/snooky23/ios-deploy-platform/archive/refs/tags/v2.9.0.tar.gz"
   license "MIT"
-  version "2.8.1"
-  sha256 "6498ecbaf63cde27c16c98ab08f80b722f299aa549daf0f5b6bc7dd25f45c504"
+  version "2.9.0"
+  sha256 "09cf67debcbe4bbd017c3b3e0edaee26e4d10ac72100246e62cec360122f9a8f"
 
   # Dependencies
   depends_on "cocoapods" => :optional
@@ -46,7 +46,7 @@ class IosDeployPlatform < Formula
       #!/usr/bin/env bash
       
       # iOS FastLane Auto Deploy - Homebrew CLI Wrapper
-      # Version: 2.8.1
+      # Version: 2.9.0
       
       set -e
       
@@ -81,7 +81,7 @@ class IosDeployPlatform < Formula
       # Show usage information
       show_usage() {
           cat <<EOF
-      📱 iOS FastLane Auto Deploy v2.8.1
+      📱 iOS FastLane Auto Deploy v2.9.0
       Enterprise-grade iOS TestFlight automation platform
       
       USAGE:
@@ -183,7 +183,7 @@ class IosDeployPlatform < Formula
                   show_usage
                   ;;
               "version"|"--version"|"-v")
-                  echo "iOS FastLane Auto Deploy v2.8.1"
+                  echo "iOS FastLane Auto Deploy v2.9.0"
                   echo "Built with ❤️  for iOS developers"
                   ;;
               "init")
@@ -217,7 +217,7 @@ class IosDeployPlatform < Formula
 
   def man_page_content
     <<~EOS
-      .TH IOS-DEPLOY 1 "January 2025" "ios-deploy 2.8.1" "iOS Development Tools"
+      .TH IOS-DEPLOY 1 "January 2025" "ios-deploy 2.9.0" "iOS Development Tools"
       .SH NAME
       ios-deploy \\- Enterprise-grade iOS TestFlight automation platform
       
@@ -475,7 +475,7 @@ class IosDeployPlatform < Formula
 
   test do
     # Test that the CLI wrapper is properly installed and executable
-    assert_match "iOS FastLane Auto Deploy v2.8.1", shell_output("#{bin}/ios-deploy version")
+    assert_match "iOS FastLane Auto Deploy v2.9.0", shell_output("#{bin}/ios-deploy version")
     
     # Test help command
     assert_match "Enterprise-grade iOS TestFlight automation", shell_output("#{bin}/ios-deploy help")
