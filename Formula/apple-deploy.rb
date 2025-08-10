@@ -39,9 +39,9 @@ class AppleDeploy < Formula
     ENV["GEM_HOME"] = libexec/"vendor"
     ENV["BUNDLE_PATH"] = libexec/"vendor"
     
-    # Install gems from Gemfile
+    # Install gems from Gemfile (skip deployment for cross-platform compatibility)
     cd libexec do
-      system "#{Formula["ruby@3.2"].opt_bin}/bundle", "install", "--deployment", "--without", "development"
+      system "#{Formula["ruby@3.2"].opt_bin}/bundle", "install", "--path", "vendor", "--without", "development"
     end
     
     # Create configuration directory
