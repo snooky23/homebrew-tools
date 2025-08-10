@@ -16,7 +16,7 @@ class AppleDeploy < Formula
   # Ruby gem dependencies will be handled via bundler
   resource "bundler" do
     url "https://rubygems.org/downloads/bundler-2.4.22.gem"
-    sha256 "f09ce61928b7c4b84f533092e6a9235a967de076f6d07b0a7f2c61f996ac84e9"
+    sha256 "747ba50b0e67df25cbd3b48f95831a77a4d53a581d55f063972fcb146d142c5f"
   end
 
   def install
