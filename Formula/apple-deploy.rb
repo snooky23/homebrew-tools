@@ -17,11 +17,6 @@ class AppleDeploy < Formula
   depends_on "xcode-install" => :optional
   depends_on "cocoapods" => :optional
 
-  # Ruby gem dependencies will be handled via bundler
-  resource "bundler" do
-    url "https://rubygems.org/downloads/bundler-2.4.22.gem"
-    sha256 "747ba50b0e67df25cbd3b48f95831a77a4d53a581d55f063972fcb146d142c5f"
-  end
 
   def install
     # Install the main application to libexec to avoid conflicts
@@ -37,8 +32,8 @@ class AppleDeploy < Formula
     man1.mkpath
     (man1/"ios-deploy.1").write man_page_content
     
-    # Install Ruby gems using bundler
-    system "#{Formula["ruby@3.2"].opt_bin}/gem", "install", "bundler", "--no-document"
+    # Install bundler using system ruby
+    system "#{Formula["ruby@3.2"].opt_bin}/gem", "install", "bundler", "--no-document" rescue nil
     
     # Set up Ruby environment
     ENV["GEM_HOME"] = libexec/"vendor"
