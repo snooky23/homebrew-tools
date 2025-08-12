@@ -1,10 +1,10 @@
 class AppleDeploy < Formula
   desc "Enterprise-grade iOS TestFlight automation platform with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
-  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.1.tar.gz"
-  sha256 "fd03dd26c2d96ec2a271417a58b0a2ed3bdae9c81f84c76c7c1d8682c6bccca0"
+  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.2.tar.gz"
+  sha256 "e1e51f19533446bb28c42c2920760f2830d1d85e583c7235fe94d367c32b932a"
   license "MIT"
-  version "2.12.1"
+  version "2.12.2"
 
   # Dependencies
   depends_on "ruby@3.2"
@@ -54,7 +54,7 @@ class AppleDeploy < Formula
       #!/usr/bin/env bash
       
       # iOS FastLane Auto Deploy - Homebrew CLI Wrapper
-      # Version: 2.12.1
+      # Version: 2.12.2
       
       set -e
       
@@ -86,7 +86,7 @@ class AppleDeploy < Formula
       # Show usage information
       show_usage() {
           cat <<EOF
-      📱 Apple Deploy v2.12.1
+      📱 Apple Deploy v2.12.2
       Enterprise-grade iOS TestFlight automation platform with Clean Architecture
       
       USAGE:
@@ -189,7 +189,7 @@ class AppleDeploy < Formula
                   show_usage
                   ;;
               "version"|"--version"|"-v")
-                  echo "Apple Deploy v2.12.1"
+                  echo "Apple Deploy v2.12.2"
                   echo "Built with ❤️  for iOS developers - Enhanced Clean Architecture"
                   ;;
               "init")
@@ -197,8 +197,7 @@ class AppleDeploy < Formula
                   ;;
               "deploy"|"build_and_upload"|"setup_certificates"|"validate_machine"|"status")
                   check_ios_project "$1"
-                  # Change to installation directory and run the original deploy.sh
-                  cd "$INSTALL_DIR"
+                  # Set up environment and run deploy.sh from current directory
                   export FL_SCRIPTS_DIR="$INSTALL_DIR/scripts"
                   exec "$INSTALL_DIR/scripts/deploy.sh" "$@"
                   ;;
@@ -216,7 +215,7 @@ class AppleDeploy < Formula
 
   def man_page_content
     <<~EOS
-      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.12.1" "iOS Development Tools"
+      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.12.2" "iOS Development Tools"
       .SH NAME
       apple-deploy \\- Enterprise-grade iOS TestFlight automation platform
       
@@ -474,7 +473,7 @@ class AppleDeploy < Formula
 
   test do
     # Test that the CLI wrapper is properly installed and executable
-    assert_match "Apple Deploy v2.12.1", shell_output("#{bin}/apple-deploy version")
+    assert_match "Apple Deploy v2.12.2", shell_output("#{bin}/apple-deploy version")
     
     # Test help command
     assert_match "Enterprise-grade iOS TestFlight automation", shell_output("#{bin}/apple-deploy help")
