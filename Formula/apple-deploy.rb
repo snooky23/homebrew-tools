@@ -1,10 +1,10 @@
 class AppleDeploy < Formula
   desc "Enterprise-grade iOS TestFlight automation platform with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
-  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.0.tar.gz"
-  sha256 "e3e238e049a32bdc32e6828298ea65aa28f00d43aac318be50fdfa5cb7ed4a45"
+  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.1.tar.gz"
+  sha256 "fd03dd26c2d96ec2a271417a58b0a2ed3bdae9c81f84c76c7c1d8682c6bccca0"
   license "MIT"
-  version "2.12.0"
+  version "2.12.1"
 
   # Dependencies
   depends_on "ruby@3.2"
@@ -54,7 +54,7 @@ class AppleDeploy < Formula
       #!/usr/bin/env bash
       
       # iOS FastLane Auto Deploy - Homebrew CLI Wrapper
-      # Version: 2.12.0
+      # Version: 2.12.1
       
       set -e
       
@@ -72,8 +72,9 @@ class AppleDeploy < Formula
       
       # Ensure we're in a valid iOS project directory
       check_ios_project() {
-          if [[ ! -f "*.xcodeproj/project.pbxproj" && ! -f "*.xcworkspace/contents.xcworkspacedata" ]]; then
-              if [[ "$1" != "init" && "$1" != "help" && "$1" != "version" ]]; then
+          # Check if we're in an iOS project directory
+          if [[ "$1" != "init" && "$1" != "help" && "$1" != "version" ]]; then
+              if ! ls *.xcodeproj/project.pbxproj >/dev/null 2>&1 && ! ls *.xcworkspace/contents.xcworkspacedata >/dev/null 2>&1; then
                   echo "❌ Error: Not in an iOS project directory"
                   echo "   Please run this command from your iOS project root directory"
                   echo "   (directory containing .xcodeproj or .xcworkspace)"
@@ -85,7 +86,7 @@ class AppleDeploy < Formula
       # Show usage information
       show_usage() {
           cat <<EOF
-      📱 Apple Deploy v2.12.0
+      📱 Apple Deploy v2.12.1
       Enterprise-grade iOS TestFlight automation platform with Clean Architecture
       
       USAGE:
@@ -188,7 +189,7 @@ class AppleDeploy < Formula
                   show_usage
                   ;;
               "version"|"--version"|"-v")
-                  echo "Apple Deploy v2.12.0"
+                  echo "Apple Deploy v2.12.1"
                   echo "Built with ❤️  for iOS developers - Enhanced Clean Architecture"
                   ;;
               "init")
@@ -215,7 +216,7 @@ class AppleDeploy < Formula
 
   def man_page_content
     <<~EOS
-      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.12.0" "iOS Development Tools"
+      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.12.1" "iOS Development Tools"
       .SH NAME
       apple-deploy \\- Enterprise-grade iOS TestFlight automation platform
       
@@ -473,7 +474,7 @@ class AppleDeploy < Formula
 
   test do
     # Test that the CLI wrapper is properly installed and executable
-    assert_match "Apple Deploy v2.12.0", shell_output("#{bin}/apple-deploy version")
+    assert_match "Apple Deploy v2.12.1", shell_output("#{bin}/apple-deploy version")
     
     # Test help command
     assert_match "Enterprise-grade iOS TestFlight automation", shell_output("#{bin}/apple-deploy help")
