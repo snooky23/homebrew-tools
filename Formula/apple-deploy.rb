@@ -1,10 +1,10 @@
 class AppleDeploy < Formula
   desc "Enterprise-grade iOS TestFlight automation platform with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
-  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.10.0.tar.gz"
-  sha256 "f2e91b62a0748215072860690076624faccd9e0bbd8de0ed370b341613cc2c17"
+  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.11.0.tar.gz"
+  sha256 "35e80a05007f5eb81b532a99ccf8ad17385619f14933cbe84df52c80b6d9345b"
   license "MIT"
-  version "2.10.0"
+  version "2.11.0"
 
   # Dependencies
   depends_on "ruby@3.2"
