@@ -2,7 +2,7 @@ class AppleDeploy < Formula
   desc "Enterprise-grade iOS TestFlight automation platform with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
   url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.3.tar.gz"
-  sha256 "b3ab03bba4357addb3d9efb408c2b8d6d40289b313b51713a381121514fe0af5"
+  sha256 "15f18e09bb597d3c6290760e7b32c55fc970c3c8e0b7278d224657404e8f6299"
   license "MIT"
   version "2.12.3"
 
