@@ -1,10 +1,10 @@
 class AppleDeploy < Formula
   desc "Enterprise-grade iOS TestFlight automation platform with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
-  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.3.tar.gz"
-  sha256 "15f18e09bb597d3c6290760e7b32c55fc970c3c8e0b7278d224657404e8f6299"
+  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.4.tar.gz"
+  sha256 "2c647c1af704181d7c20806a4ea3af1fb717c788aa94ed1f9fa35ff07f177788"
   license "MIT"
-  version "2.12.3"
+  version "2.12.4"
 
   # Dependencies
   depends_on "ruby@3.2"
@@ -54,7 +54,7 @@ class AppleDeploy < Formula
       #!/usr/bin/env bash
       
       # iOS FastLane Auto Deploy - Homebrew CLI Wrapper
-      # Version: 2.12.3
+      # Version: 2.12.4
       
       set -e
       
@@ -86,7 +86,7 @@ class AppleDeploy < Formula
       # Show usage information
       show_usage() {
           cat <<EOF
-      📱 Apple Deploy v2.12.3
+      📱 Apple Deploy v2.12.4
       Enterprise-grade iOS TestFlight automation platform with Clean Architecture
       
       USAGE:
@@ -113,7 +113,7 @@ class AppleDeploy < Formula
           scheme="YourScheme"                  Xcode scheme
       
       OPTIONAL PARAMETERS:
-          version_bump="patch|minor|major|auto|sync"  Version increment strategy
+          version_bump="patch|minor|major"  Version increment strategy
           testflight_enhanced="true|false"           Enhanced TestFlight confirmation
           p12_password="password"                     P12 certificate password
           apple_info_dir="/custom/path"               Custom apple_info location
@@ -189,7 +189,7 @@ class AppleDeploy < Formula
                   show_usage
                   ;;
               "version"|"--version"|"-v")
-                  echo "Apple Deploy v2.12.3"
+                  echo "Apple Deploy v2.12.4"
                   echo "Built with ❤️  for iOS developers - Enhanced Clean Architecture"
                   ;;
               "init")
@@ -215,7 +215,7 @@ class AppleDeploy < Formula
 
   def man_page_content
     <<~EOS
-      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.12.3" "iOS Development Tools"
+      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.12.4" "iOS Development Tools"
       .SH NAME
       apple-deploy \\- Enterprise-grade iOS TestFlight automation platform
       
@@ -307,7 +307,7 @@ class AppleDeploy < Formula
       .SH OPTIONAL OPTIONS
       .TP
       .BI version_bump= STRATEGY
-      Version increment strategy: patch, minor, major, auto, or sync
+      Version increment strategy: patch, minor, or major
       
       .TP
       .BI testflight_enhanced= BOOL
@@ -416,7 +416,7 @@ class AppleDeploy < Formula
       SCHEME="YourAppScheme"
       
       # Deployment Configuration
-      VERSION_BUMP="patch"  # patch, minor, major, auto, sync
+      VERSION_BUMP="patch"  # patch, minor, major
       TESTFLIGHT_ENHANCED="false"  # true for extended confirmation & logging
       
       # Certificate Configuration (optional)
@@ -473,7 +473,7 @@ class AppleDeploy < Formula
 
   test do
     # Test that the CLI wrapper is properly installed and executable
-    assert_match "Apple Deploy v2.12.3", shell_output("#{bin}/apple-deploy version")
+    assert_match "Apple Deploy v2.12.4", shell_output("#{bin}/apple-deploy version")
     
     # Test help command
     assert_match "Enterprise-grade iOS TestFlight automation", shell_output("#{bin}/apple-deploy help")
