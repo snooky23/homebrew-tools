@@ -1,10 +1,10 @@
 class AppleDeploy < Formula
   desc "Enterprise-grade iOS TestFlight automation platform with Clean Architecture and intelligent certificate management"
   homepage "https://github.com/snooky23/apple-deploy"
-  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.4.tar.gz"
-  sha256 "2c647c1af704181d7c20806a4ea3af1fb717c788aa94ed1f9fa35ff07f177788"
+  url "https://github.com/snooky23/apple-deploy/archive/refs/tags/v2.12.5.tar.gz"
+  sha256 "377c54471bf787b014df59ee3871dab1172b14ba2cfa474b40af6f517131cb79"
   license "MIT"
-  version "2.12.4"
+  version "2.12.5"
 
   # Dependencies
   depends_on "ruby@3.2"
@@ -54,7 +54,7 @@ class AppleDeploy < Formula
       #!/usr/bin/env bash
       
       # iOS FastLane Auto Deploy - Homebrew CLI Wrapper
-      # Version: 2.12.4
+      # Version: 2.12.5
       
       set -e
       
@@ -86,7 +86,7 @@ class AppleDeploy < Formula
       # Show usage information
       show_usage() {
           cat <<EOF
-      📱 Apple Deploy v2.12.4
+      📱 Apple Deploy v2.12.5
       Enterprise-grade iOS TestFlight automation platform with Clean Architecture
       
       USAGE:
@@ -189,7 +189,7 @@ class AppleDeploy < Formula
                   show_usage
                   ;;
               "version"|"--version"|"-v")
-                  echo "Apple Deploy v2.12.4"
+                  echo "Apple Deploy v2.12.5"
                   echo "Built with ❤️  for iOS developers - Enhanced Clean Architecture"
                   ;;
               "init")
@@ -215,7 +215,7 @@ class AppleDeploy < Formula
 
   def man_page_content
     <<~EOS
-      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.12.4" "iOS Development Tools"
+      .TH APPLE-DEPLOY 1 "January 2025" "apple-deploy 2.12.5" "iOS Development Tools"
       .SH NAME
       apple-deploy \\- Enterprise-grade iOS TestFlight automation platform
       
@@ -473,7 +473,7 @@ class AppleDeploy < Formula
 
   test do
     # Test that the CLI wrapper is properly installed and executable
-    assert_match "Apple Deploy v2.12.4", shell_output("#{bin}/apple-deploy version")
+    assert_match "Apple Deploy v2.12.5", shell_output("#{bin}/apple-deploy version")
     
     # Test help command
     assert_match "Enterprise-grade iOS TestFlight automation", shell_output("#{bin}/apple-deploy help")
